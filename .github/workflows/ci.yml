@@ -1,0 +1,31 @@
+name: CI - Compilar y probar C#
+
+on:
+  push:
+    branches: [ "main", "feature/**", "fix/**" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener el código
+        uses: actions/checkout@v6
+
+      - name: Instalar .NET SDK 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restaurar dependencias
+        run: dotnet restore tests/GestionTareas.Tests/GestionTareas.Tests.csproj
+
+      - name: Compilar aplicación y pruebas
+        run: dotnet build tests/GestionTareas.Tests/GestionTareas.Tests.csproj --configuration Release --no-restore
+
+      - name: Ejecutar pruebas unitarias
+        run: dotnet test tests/GestionTareas.Tests/GestionTareas.Tests.csproj --configuration Release --no-build --logger "console;verbosity=normal"

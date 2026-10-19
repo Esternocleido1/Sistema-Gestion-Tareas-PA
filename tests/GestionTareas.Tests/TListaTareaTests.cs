@@ -57,10 +57,36 @@ public class TListaTareaTests
 
         Assert.False(gestor.CambiarEstado(999, EstadoTarea.Finalizada));
     }
-
-    private static Tarea CrearTarea(int id, string titulo)
+    [Fact]
+    public void ObtenerPorPrioridad_SoloDevuelveTareasSolicitadas()
     {
-        return new Tarea(id, titulo, "Descripción de prueba", "Equipo de desarrollo",
-            PrioridadTarea.Media);
+        TListaTarea gestor = new();
+
+        gestor.Registrar(
+            CrearTarea(1, "Preparar repositorio", PrioridadTarea.Alta));
+
+        gestor.Registrar(
+            CrearTarea(2, "Documentar proyecto", PrioridadTarea.Media));
+
+        gestor.Registrar(
+            CrearTarea(3, "Revisar pruebas", PrioridadTarea.Alta));
+
+        IReadOnlyList<Tarea> resultado =
+            gestor.ObtenerPorPrioridad(PrioridadTarea.Alta);
+
+        Assert.Equal(2, resultado.Count);
+
+        Assert.All(
+            resultado,
+            tarea => Assert.Equal(PrioridadTarea.Alta, tarea.Prioridad));
+    }
+    private static Tarea CrearTarea(int id,string titulo,PrioridadTarea prioridad = PrioridadTarea.Media)
+    {
+        return new Tarea(
+            id,
+            titulo,
+            "Descripción de prueba",
+            "Equipo de desarrollo",
+            prioridad);
     }
 }

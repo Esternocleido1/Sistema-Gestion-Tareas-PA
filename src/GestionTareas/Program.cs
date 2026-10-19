@@ -9,6 +9,7 @@ while (true)
     Console.WriteLine("1. Registrar tarea");
     Console.WriteLine("2. Listar tareas");
     Console.WriteLine("3. Cambiar estado de tarea");
+    Console.WriteLine("4. Filtrar tareas por prioridad");
     Console.WriteLine("0. Salir");
     Console.Write("Seleccione una opción: ");
     string? opcion = Console.ReadLine();
@@ -23,6 +24,9 @@ while (true)
             break;
         case "3":
             CambiarEstado(gestor);
+            break;
+        case "4":
+            FiltrarTareasPorPrioridad(gestor);
             break;
         case "0":
             return;
@@ -108,4 +112,39 @@ static void CambiarEstado(TListaTarea gestor)
     Console.WriteLine(gestor.CambiarEstado(id, estado)
         ? "Estado actualizado correctamente."
         : "No existe una tarea con ese ID.");
+}
+static void FiltrarTareasPorPrioridad(TListaTarea gestor)
+{
+    Console.Write("Prioridad a buscar (Baja, Media, Alta): ");
+
+    if (!Enum.TryParse(
+            Console.ReadLine(),
+            ignoreCase: true,
+            out PrioridadTarea prioridad)
+        || !Enum.IsDefined(prioridad))
+    {
+        Console.WriteLine("Prioridad no válida.");
+        return;
+    }
+
+    IReadOnlyList<Tarea> tareas =
+        gestor.ObtenerPorPrioridad(prioridad);
+
+    if (tareas.Count == 0)
+    {
+        Console.WriteLine(
+            $"No hay tareas con prioridad {prioridad}.");
+        return;
+    }
+
+    Console.WriteLine("\nID | TÍTULO | RESPONSABLE | PRIORIDAD | ESTADO");
+    Console.WriteLine(new string('-', 65));
+
+    foreach (Tarea tarea in tareas)
+    {
+        Console.WriteLine(
+            $"{tarea.Id} | {tarea.Titulo} | " +
+            $"{tarea.Responsable} | {tarea.Prioridad} | " +
+            $"{tarea.Estado}");
+    }
 }

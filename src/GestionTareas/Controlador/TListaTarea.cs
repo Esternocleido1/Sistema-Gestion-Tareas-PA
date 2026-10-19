@@ -36,7 +36,18 @@ public class TListaTarea
     {
         return _listaTareas.AsReadOnly();
     }
+    public IReadOnlyList<Tarea> ObtenerPorPrioridad(PrioridadTarea prioridad)
+    {
+        if (!Enum.IsDefined(prioridad))
+        {
+            throw new ArgumentException("La prioridad no es válida.",nameof(prioridad));
+        }
 
+        return _listaTareas
+            .Where(t => t.Prioridad == prioridad)
+            .ToList()
+            .AsReadOnly();
+    }
     public bool CambiarEstado(int id, EstadoTarea nuevoEstado)
     {
         if (!Enum.IsDefined(nuevoEstado))

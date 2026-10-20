@@ -1,29 +1,22 @@
-# Flujo de trabajo del repositorio
+# Flujo de trabajo utilizado
 
-## Flujo elegido
-Para el tamaño de este proyecto se utilizará una rama principal `main` y ramas cortas por funcionalidad. Es una forma sencilla de trabajo basada en integración frecuente, cercana a Trunk Based Development, sin crear todas las ramas permanentes de Git Flow.
+## 1. Organización del repositorio
+El proyecto Sistema de Gestión de Tareas de Desarrollo se encuentra alojado en GitHub. La rama `main` contiene la versión integrada del código. Los archivos se organizan en las carpetas `src`, `tests` y `docs`, además de la configuración de automatización en `.github/workflows`.
 
-## Ramas sugeridas
-- `main`: versión integrada y comprobada.
-- `feature/registro-tareas`: registro y validación de tareas.
-- `feature/pruebas-unitarias`: pruebas del controlador.
-- `docs/informe-apa7`: documentación e informe.
+## 2. Control de versiones con Git
+Se utilizó Git para registrar los cambios del proyecto mediante commits. Los cambios se preparan con `git add` y se registran con `git commit`, manteniendo un historial de las modificaciones realizadas.
 
-## Ciclo de trabajo
-1. Crear un Issue para describir el trabajo y sus criterios de aceptación.
-2. Crear una rama a partir de `main`.
-3. Realizar un cambio pequeño y probarlo localmente.
-4. Crear commits con mensajes claros, por ejemplo `feat: validar título de tarea`.
-5. Enviar la rama a GitHub y abrir un Pull Request hacia `main`.
-6. Revisar el cambio, resolver observaciones y comprobar el estado del pipeline.
-7. Integrar el Pull Request cuando la revisión y las comprobaciones sean satisfactorias.
-8. Cerrar el Issue relacionado y actualizar el tablero del proyecto.
+## 3. Desarrollo mediante ramas
+Para implementar el filtro por prioridad se creó la rama `feature/filtrar-tareas-prioridad`, separada de la rama principal. En ella se modificó el controlador de tareas, se añadió una opción al menú de consola y se incorporó una prueba unitaria.
 
-## Reglas recomendadas
-- No subir carpetas `bin` ni `obj`.
-- Evitar commits que mezclen cambios sin relación.
-- No incorporar secretos, contraseñas o tokens al repositorio.
-- No afirmar que hubo Code Review o que las pruebas pasaron sin evidencia verificable.
+## 4. Pull Request y revisión de cambios
+Se abrió el Pull Request #1, titulado `Agregar filtro de tareas por prioridad`, para comparar la rama de funcionalidad con `main`. Se revisaron los archivos modificados y se comprobó el resultado de las verificaciones automáticas antes de fusionar los cambios.
 
-## Evidencias para el informe
-Capturar la página del repositorio, ramas, historial de commits, Issue, tablero, Pull Request con revisión y pestaña Actions con el pipeline completado.
+## 5. Integración continua con GitHub Actions
+El repositorio cuenta con un flujo de trabajo definido en `.github/workflows/ci.yml`. El pipeline ejecuta comprobaciones automáticas del proyecto, incluyendo compilación y pruebas. En el Pull Request #1, GitHub mostró que todas las comprobaciones habían pasado y que no existían conflictos con la rama base.
+
+## 6. Gestión del trabajo
+Se creó el Issue #2 para organizar la documentación y las evidencias del proyecto. El Issue se incorporó al tablero Kanban `Gestión del Proyecto - Programación Avanzada` y se asoció al Milestone `Entrega del proyecto - Programación Avanzada`.
+
+## 7. Conclusión
+El flujo de trabajo permitió separar el desarrollo de una funcionalidad de la rama principal, comprobar los cambios mediante pruebas automatizadas y fusionarlos utilizando un Pull Request. La gestión con Issues, Projects y Milestones facilita organizar y dar seguimiento a las tareas pendientes.

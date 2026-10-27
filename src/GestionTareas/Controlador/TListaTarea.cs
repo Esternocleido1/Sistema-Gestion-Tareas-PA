@@ -48,6 +48,20 @@ public class TListaTarea
             .ToList()
             .AsReadOnly();
     }
+
+    public IReadOnlyList<Tarea> ObtenerPorEstado(EstadoTarea estado)
+    {
+        if (!Enum.IsDefined(estado))
+        {
+            throw new ArgumentException("El estado no es válido.", nameof(estado));
+        }
+
+        return _listaTareas
+            .Where(t => t.Estado == estado)
+            .ToList()
+            .AsReadOnly();
+    }
+
     public bool CambiarEstado(int id, EstadoTarea nuevoEstado)
     {
         if (!Enum.IsDefined(nuevoEstado))

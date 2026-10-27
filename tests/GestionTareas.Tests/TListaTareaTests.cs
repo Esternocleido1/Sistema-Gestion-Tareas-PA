@@ -80,13 +80,76 @@ public class TListaTareaTests
             resultado,
             tarea => Assert.Equal(PrioridadTarea.Alta, tarea.Prioridad));
     }
-    private static Tarea CrearTarea(int id,string titulo,PrioridadTarea prioridad = PrioridadTarea.Media)
+
+    [Fact]
+    public void ObtenerPorEstado_SoloDevuelveTareasDelEstadoSolicitado_SinModificarEstados()
+    {
+        TListaTarea gestor = new();
+        gestor.Registrar(CrearTarea(1, "Pendiente", estado: EstadoTarea.Pendiente));
+        gestor.Registrar(CrearTarea(2, "En progreso", estado: EstadoTarea.EnProgreso));
+        gestor.Registrar(CrearTarea(3, "Finalizada", estado: EstadoTarea.Finalizada));
+
+        IReadOnlyList<Tarea> pendientes = gestor.ObtenerPorEstado(EstadoTarea.Pendiente);
+        IReadOnlyList<Tarea> enProgreso = gestor.ObtenerPorEstado(EstadoTarea.EnProgreso);
+        IReadOnlyList<Tarea> finalizadas = gestor.ObtenerPorEstado(EstadoTarea.Finalizada);
+
+        Assert.Equal(1, Assert.Single(pendientes).Id);
+        Assert.Equal(2, Assert.Single(enProgreso).Id);
+
+        Tarea tareaResultado = Assert.Single(finalizadas);
+        Assert.Equal(3, tareaResultado.Id);
+        Assert.Equal("Finalizada", tareaResultado.Titulo);
+        Assert.Equal(EstadoTarea.Finalizada, tareaResultado.Estado);
+        Assert.Collection(
+            gestor.ObtenerTodas(),
+            tarea => Assert.Equal(EstadoTarea.Pendiente, tarea.Estado),
+            tarea => Assert.Equal(EstadoTarea.EnProgreso, tarea.Estado),
+            tarea => Assert.Equal(EstadoTarea.Finalizada, tarea.Estado));
+    }
+
+    [Fact]
+    public void ObtenerPorEstado_SinCoincidencias_RetornaListaVaciaSinCambiarTarea()
+    {
+        TListaTarea gestor = new();
+        Tarea tarea = CrearTarea(1, "Pendiente", estado: EstadoTarea.Pendiente);
+        gestor.Registrar(tarea);
+
+        IReadOnlyList<Tarea> resultado = gestor.ObtenerPorEstado(EstadoTarea.Finalizada);
+
+        Assert.Empty(resultado);
+        Assert.Equal(EstadoTarea.Pendiente, tarea.Estado);
+    }
+
+    [Fact]
+    public void ObtenerPorEstado_ListaVacia_RetornaListaVacia()
+    {
+        TListaTarea gestor = new();
+
+        IReadOnlyList<Tarea> resultado = gestor.ObtenerPorEstado(EstadoTarea.Pendiente);
+
+        Assert.Empty(resultado);
+    }
+
+    [Fact]
+    public void ObtenerPorEstado_EstadoNoDefinido_LanzaExcepcion()
+    {
+        TListaTarea gestor = new();
+
+        Assert.Throws<ArgumentException>(() => gestor.ObtenerPorEstado((EstadoTarea)99));
+    }
+
+    private static Tarea CrearTarea(
+        int id,
+        string titulo,
+        PrioridadTarea prioridad = PrioridadTarea.Media,
+        EstadoTarea estado = EstadoTarea.Pendiente)
     {
         return new Tarea(
             id,
             titulo,
             "Descripción de prueba",
             "Equipo de desarrollo",
-            prioridad);
+            prioridad,
+            estado);
     }
 }

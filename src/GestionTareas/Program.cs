@@ -10,6 +10,7 @@ while (true)
     Console.WriteLine("2. Listar tareas");
     Console.WriteLine("3. Cambiar estado de tarea");
     Console.WriteLine("4. Filtrar tareas por prioridad");
+    Console.WriteLine("5. Filtrar tareas por estado");
     Console.WriteLine("0. Salir");
     Console.Write("Seleccione una opción: ");
     string? opcion = Console.ReadLine();
@@ -27,6 +28,9 @@ while (true)
             break;
         case "4":
             FiltrarTareasPorPrioridad(gestor);
+            break;
+        case "5":
+            FiltrarTareasPorEstado(gestor);
             break;
         case "0":
             return;
@@ -134,6 +138,44 @@ static void FiltrarTareasPorPrioridad(TListaTarea gestor)
     {
         Console.WriteLine(
             $"No hay tareas con prioridad {prioridad}.");
+        return;
+    }
+
+    Console.WriteLine("\nID | TÍTULO | RESPONSABLE | PRIORIDAD | ESTADO");
+    Console.WriteLine(new string('-', 65));
+
+    foreach (Tarea tarea in tareas)
+    {
+        Console.WriteLine(
+            $"{tarea.Id} | {tarea.Titulo} | " +
+            $"{tarea.Responsable} | {tarea.Prioridad} | " +
+            $"{tarea.Estado}");
+    }
+}
+
+static void FiltrarTareasPorEstado(TListaTarea gestor)
+{
+    Console.Write("Estado a buscar (Pendiente, EnProgreso, Finalizada): ");
+    string? estadoIngresado = Console.ReadLine();
+
+    if (string.IsNullOrWhiteSpace(estadoIngresado)
+        || !Enum.GetNames<EstadoTarea>()
+            .Contains(estadoIngresado, StringComparer.OrdinalIgnoreCase))
+    {
+        Console.WriteLine("Estado no válido. Use Pendiente, EnProgreso o Finalizada.");
+        return;
+    }
+
+    EstadoTarea estado = Enum.GetValues<EstadoTarea>()
+        .Single(estadoAdmitido => string.Equals(
+            estadoAdmitido.ToString(),
+            estadoIngresado,
+            StringComparison.OrdinalIgnoreCase));
+
+    IReadOnlyList<Tarea> tareas = gestor.ObtenerPorEstado(estado);
+    if (tareas.Count == 0)
+    {
+        Console.WriteLine($"No hay tareas con estado {estado}.");
         return;
     }
 

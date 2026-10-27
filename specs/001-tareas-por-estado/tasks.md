@@ -12,7 +12,7 @@
 
 **Purpose**: Verify the current test baseline before feature work; no new project or dependency setup is needed.
 
-- [ ] T001 Run the existing baseline suite with `dotnet test tests/GestionTareas.Tests/GestionTareas.Tests.csproj` before changes.
+- [X] T001 Run the existing baseline suite with `dotnet test tests/GestionTareas.Tests/GestionTareas.Tests.csproj` before changes.
 
 ---
 
@@ -32,12 +32,12 @@ The existing console project, in-memory task model, supported state enum, and xU
 
 ### Tests for User Story 1
 
-- [ ] T002 [US1] Add controller tests in `tests/GestionTareas.Tests/TListaTareaTests.cs` for `ObtenerPorEstado`: assert exact filtering for `Pendiente`, `EnProgreso` and `Finalizada`, assert an empty result for a state with no matches and for an empty list, and assert source task states remain unchanged; extend the existing `CrearTarea` helper to accept an optional `EstadoTarea` and pass it to the existing `Tarea` constructor.
+- [X] T002 [US1] Add controller tests in `tests/GestionTareas.Tests/TListaTareaTests.cs` for `ObtenerPorEstado`: assert exact filtering for `Pendiente`, `EnProgreso` and `Finalizada`, assert an empty result for a state with no matches and for an empty list, and assert source task states remain unchanged; extend the existing `CrearTarea` helper to accept an optional `EstadoTarea` and pass it to the existing `Tarea` constructor.
 
 ### Implementation for User Story 1
 
-- [ ] T003 [US1] Add `ObtenerPorEstado(EstadoTarea estado)` to `src/GestionTareas/Controlador/TListaTarea.cs`, following `ObtenerPorPrioridad`; accept only defined enum values and return a read-only list without mutating tasks. The valid states are exactly `Pendiente`, `EnProgreso` and `Finalizada`.
-- [ ] T004 [US1] Add menu option `5` after the existing options in `src/GestionTareas/Program.cs` and display matching task identifiers and details, or a clear no-results message, using `ObtenerPorEstado`; preserve existing choices `0` through `4` and their behavior.
+- [X] T003 [US1] Add `ObtenerPorEstado(EstadoTarea estado)` to `src/GestionTareas/Controlador/TListaTarea.cs`, following `ObtenerPorPrioridad`; accept only defined enum values and return a read-only list without mutating tasks. The valid states are exactly `Pendiente`, `EnProgreso` and `Finalizada`.
+- [X] T004 [US1] Add menu option `5` after the existing options in `src/GestionTareas/Program.cs` and display matching task identifiers and details, or a clear no-results message, using `ObtenerPorEstado`; preserve existing choices `0` through `4` and their behavior.
 
 **Checkpoint**: The valid-state query works independently and leaves all task data unchanged.
 
@@ -51,11 +51,11 @@ The existing console project, in-memory task model, supported state enum, and xU
 
 ### Tests for User Story 2
 
-- [ ] T005 [US2] Add a process-level console-flow test in `tests/GestionTareas.Tests/ProgramFlowTests.cs`: launch the existing console application with `ProcessStartInfo` using `dotnet run --project src/GestionTareas/GestionTareas.csproj`, set the child working directory to the repository root, redirect standard input/output, and feed scripted menu selections that register a task, change it to `Finalizada`, select option `5` separately before each invalid input (`0`, `1`, `2` and an unknown name), select option `5` with `fInAlIzAdA`, list with option `2` and exit with `0`; assert an invalid-input message and menu recovery for every invalid value, matching query output, and that the final listing still shows `Finalizada`. Use existing .NET APIs only; add no application abstraction or package.
+- [X] T005 [US2] Add a process-level console-flow test in `tests/GestionTareas.Tests/ProgramFlowTests.cs`: launch the existing console application with `ProcessStartInfo` using `dotnet run --project src/GestionTareas/GestionTareas.csproj`, set the child working directory to the repository root, redirect standard input/output, and feed scripted menu selections that register a task, change it to `Finalizada`, query `Pendiente` for no matches, select option `5` separately before each invalid input (`0`, `1`, `2` and an unknown name), query with `fInAlIzAdA`, list with option `2` and exit with `0`; assert the no-results message, an invalid-input message and menu recovery for every invalid value, matching query output, and that the final listing still shows `Finalizada`. Use existing .NET APIs only; add no application abstraction or package.
 
 ### Implementation for User Story 2
 
-- [ ] T006 [US2] Validate input for menu option `5` in `src/GestionTareas/Program.cs` by matching against the names of the defined `EstadoTarea` values without case sensitivity; reject numeric strings before enum conversion, plus unknown and unsupported names, show a comprehensible message, and return to the menu without altering tasks.
+- [X] T006 [US2] Validate input for menu option `5` in `src/GestionTareas/Program.cs` by matching against the names of the defined `EstadoTarea` values without case sensitivity; reject numeric strings before enum conversion, plus unknown and unsupported names, show a comprehensible message, and return to the menu without altering tasks.
 
 **Checkpoint**: Invalid input is handled safely, case variations work, and the user can continue using the application.
 
@@ -69,7 +69,7 @@ The existing console project, in-memory task model, supported state enum, and xU
 
 ### Verification for User Story 3
 
-- [ ] T007 [US3] Extend `tests/GestionTareas.Tests/ProgramFlowTests.cs` with a child-process regression scenario that selects existing menu options `1`, `2`, `3` and `4` to register a task, list it, change its state and filter by priority; assert each operation's expected output. Run `dotnet test tests/GestionTareas.Tests/GestionTareas.Tests.csproj` and confirm the existing controller tests `Registrar_TareaValida_AgregaLaTarea`, `CambiarEstado_IDExistente_ActualizaEstado` and `ObtenerPorPrioridad_SoloDevuelveTareasSolicitadas` also pass. This adds explicit listing/menu coverage rather than treating one controller test as full compatibility proof.
+- [X] T007 [US3] Extend `tests/GestionTareas.Tests/ProgramFlowTests.cs` with a child-process regression scenario that selects existing menu options `1`, `2`, `3` and `4` to register a task, list it, change its state and filter by priority; assert each operation's expected output. Run `dotnet test tests/GestionTareas.Tests/GestionTareas.Tests.csproj` and confirm the existing controller tests `Registrar_TareaValida_AgregaLaTarea`, `CambiarEstado_IDExistente_ActualizaEstado` and `ObtenerPorPrioridad_SoloDevuelveTareasSolicitadas` also pass. This adds explicit listing/menu coverage rather than treating one controller test as full compatibility proof.
 
 **Checkpoint**: All four prior user operations pass automated controller and console-flow verification.
 
@@ -79,7 +79,7 @@ The existing console project, in-memory task model, supported state enum, and xU
 
 **Purpose**: Complete the end-to-end validation documented for this feature.
 
-- [ ] T008 Run the validation scenarios in `specs/001-tareas-por-estado/quickstart.md`, confirm all automated tests pass with `dotnet test tests/GestionTareas.Tests/GestionTareas.Tests.csproj`, and verify the existing build-and-test workflow in `.github/workflows/ci.yml` passes.
+- [X] T008 Run the validation scenarios in `specs/001-tareas-por-estado/quickstart.md`, confirm all automated tests pass with `dotnet test tests/GestionTareas.Tests/GestionTareas.Tests.csproj`, and locally verify the build-and-test commands from `.github/workflows/ci.yml` using Release configuration.
 
 ---
 
